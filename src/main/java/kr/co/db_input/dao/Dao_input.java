@@ -1,6 +1,7 @@
 package kr.co.db_input.dao;
 
 import java.sql.*;
+import java.util.ArrayList;
 import kr.co.db_input.dto.Dto_input;
 
 public class Dao_input {
@@ -26,7 +27,19 @@ public class Dao_input {
 		pstmt.executeUpdate();
 	}
 	
-	public void list() {
+	public ArrayList<Dto_input> list() throws SQLException {
+		// select하고 그 내용을 저장(ArrayList)
+		// 레코드에 있는 값을 저장할 공간 
+		ArrayList<Dto_input> list = new ArrayList<Dto_input>();
+		String sql = "select * from member order by id desc";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
 		
+		while(rs.next()) { // 레코드가 있으면 실행
+			// list에 레코드를 하나씩 입력(레코드를 Dto_input에 넣은후 Dto_input를 ArrayList에
+			list.add(new Dto_input(rs.getString("id"),rs.getString("name"),rs.getString("age"),rs.getString("addr"),rs.getString("writeday")));			
+		}
+		
+		return list;
 	}
 }

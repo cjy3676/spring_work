@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.co.db_input.command.ListCommand;
 import kr.co.db_input.command.WriteCommand;
 import kr.co.db_input.dto.Dto_input;
 
@@ -90,6 +91,20 @@ public class HomeController {
 		// 실행할 Command 호출
 		WriteCommand wc = new WriteCommand();
 		wc.execute(dto_input);
-		return "redirect:list";
+		return "redirect:list"; // response.sendRedirect("list.jsp")
+	}
+	
+	@RequestMapping("/list")
+	public String list(Model model) throws SQLException { // DB에 있는 내용을 출력
+		// 해당 Command파일 생성, Dao_input에 list와 관계된 메소드
+		ListCommand lc = new ListCommand();
+		lc.execute(model);
+		return "/list";
+	}
+	
+	@RequestMapping("/content")
+	public String content(Model model, HttpServletRequest request) {
+		String id = request.getParameter("id");
+		return "/content";
 	}
 }
