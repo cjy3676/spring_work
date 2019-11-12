@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,22 +7,30 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%-- ${list.get(0).getName()} --%>
-<table width="500">
+<table width="400">
 <tr>
 <td>이름</td>
-<td>나이</td>
-<td>주소</td>
-<td>작성일</td>
+<td>${dto_input.name}</td>
 </tr>
-<c:forEach items="${list}" var="dto_input">
 <tr>
-<td><a href="content?id=${dto_input.id}">${dto_input.name}</a></td>
+<td>나이</td>
 <td>${dto_input.age}</td>
+</tr>
+<tr>
+<td>주소</td>
 <td>${dto_input.addr}</td>
+</tr>
+<tr>
+<td>작성일</td>
 <td>${dto_input.writeday}</td>
 </tr>
-</c:forEach>
+<tr>
+<td colspan="2">
+<a href="update?id=${dto_input.id}">수정</a>
+<a href="delete?id=${dto_input.id}">삭제</a>
+<a href="list">목록</a>
+</td>
+</tr>
 </table>
 </body>
 </html>

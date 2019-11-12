@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.co.db_input.command.ContentCommand;
+import kr.co.db_input.command.DeleteCommand;
 import kr.co.db_input.command.ListCommand;
+import kr.co.db_input.command.UpdateCommand;
+import kr.co.db_input.command.UpdateOkCommand;
 import kr.co.db_input.command.WriteCommand;
 import kr.co.db_input.dto.Dto_input;
 
@@ -46,11 +50,13 @@ public class HomeController {
 	
 	@RequestMapping("/input")
 	public String input() {
+		
 		return "/input";
 	}
 	
 	@RequestMapping("/input2")
 	public String input2() {
+		
 		return "/input2";
 	}
 	
@@ -64,6 +70,7 @@ public class HomeController {
 	public String view(HttpServletRequest request) {
 		int num1 = Integer.parseInt(request.getParameter("num1"));
 		int num2 = Integer.parseInt(request.getParameter("num2"));
+		
 		return "/view";
 	}
 	
@@ -77,11 +84,13 @@ public class HomeController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("name","spiderman");
 		mav.setViewName("/output");
+		
 		return mav;
 	}
 	
 	@RequestMapping("/write")
 	public String write() {
+		
 		return "/write";
 	}
 	
@@ -91,6 +100,7 @@ public class HomeController {
 		// 실행할 Command 호출
 		WriteCommand wc = new WriteCommand();
 		wc.execute(dto_input);
+		
 		return "redirect:list"; // response.sendRedirect("list.jsp")
 	}
 	
@@ -99,12 +109,43 @@ public class HomeController {
 		// 해당 Command파일 생성, Dao_input에 list와 관계된 메소드
 		ListCommand lc = new ListCommand();
 		lc.execute(model);
+		
 		return "/list";
 	}
 	
 	@RequestMapping("/content")
-	public String content(Model model, HttpServletRequest request) {
-		String id = request.getParameter("id");
+	public String content(HttpServletRequest request, Model model) throws SQLException { // 1명의 레코드를 보여주기
+		// Command 호출
+		String id = request.getParameter("id"); 
+		ContentCommand cc = new ContentCommand();
+		Dto_input dto_input = cc.execute(id, model);
+		model.addAttribute("dto_input",dto_input);
+		
 		return "/content";
+	}
+	
+	@RequestMapping("/delete")
+	public String delete(HttpServletRequest request) throws SQLException {
+		// 삭제 Command 호출
+		DeleteCommand dc = new DeleteCommand();
+		dc.execute(request.getParameter("id"));
+		return "redirect:/list";
+	}
+	
+	@RequestMapping("/update")
+	public String update(HttpServletRequest request, Model model) throws SQLException {
+		// 수정 Command 호출
+		UpdateCommand uc = new UpdateCommand();
+		String id = request.getParameter("id");
+		uc.execute(id, model);
+		return "/update";
+	}
+	
+	@RequestMapping("/update_ok")
+	public String update_ok(Dto_input dto_input) throws SQLException {
+		 // update_ok Command 실행
+		UpdateOkCommand uoc = new UpdateOkCommand();
+		uoc.execute(dto_input);
+		return "redirect:/content?id="+dto_input.getId();
 	}
 }

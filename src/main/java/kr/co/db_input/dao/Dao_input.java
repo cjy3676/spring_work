@@ -42,4 +42,41 @@ public class Dao_input {
 		
 		return list;
 	}
+	
+	public Dto_input content(String id) throws SQLException {
+		String sql = "select * from member where id="+id;
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		
+		Dto_input dto_input = new Dto_input(rs.getString("id"),rs.getString("name"),rs.getString("age"),rs.getString("addr"),rs.getString("writeday"));
+		return dto_input;
+	}
+	
+	public void delete(String id) throws SQLException {
+		String sql = "delete from member where id="+id;
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.executeUpdate();
+	}
+	
+	public Dto_input update(String id) throws SQLException { // 수정X, 수정할 레코드를 읽어오기
+		String sql = "select * from member where id="+id;
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		
+		Dto_input dto_input = new Dto_input(rs.getString("id"),rs.getString("name"),rs.getString("age"),rs.getString("addr"),rs.getString("writeday"));
+		return dto_input;
+	}
+	
+	public void update_ok(Dto_input dto_input) throws SQLException {
+		String sql = "update member set name=?, age=?, addr=? where id=?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, dto_input.getName());
+		pstmt.setString(2, dto_input.getAge());
+		pstmt.setString(3, dto_input.getAddr());
+		pstmt.setString(4, dto_input.getId());
+
+		pstmt.executeUpdate();
+	}
 }
