@@ -148,4 +148,9 @@ public class HomeController {
 		uoc.execute(dto_input);
 		return "redirect:/content?id="+dto_input.getId();
 	}
+	
+	@RequestMapping("/write_content")
+	public String write_content() {
+		return "/write_content";
+	}
 }
